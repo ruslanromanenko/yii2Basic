@@ -6,6 +6,7 @@ use Yii;
 use yii\helpers\Html;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\UploadedFile;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
@@ -105,6 +106,10 @@ class SiteController extends Controller
 		if ($form->load(Yii::$app->request->post()) && $form->validate()){
 			$name = Html::encode($form->name);
 			$email = Html::encode($form->email);
+			
+			$form->file = UploadedFile::getInstance($form, 'file');
+			
+			$form->file->saveAs('photo/'.$form->file->baseName.".".$form->file->extension);
 		}
 		else{
 			$name = '';
@@ -115,8 +120,7 @@ class SiteController extends Controller
 			[
 				'form' => $form,
 				'name' => $name,
-				'email' => $email
-			
+				'email' => $email			
 			]
 		); 
 	}
